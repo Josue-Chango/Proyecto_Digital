@@ -14,11 +14,9 @@
 
 <item itemtype="Resistor" CircId="Resistor-Puerta" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="844,-44" rotation="0" hflip="1" vflip="1" label="R_Puerta" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="220 Ohm" />
 
-<item itemtype="Potentiometer" CircId="Pot-1" mainComp="false" ShowProp="Resistance" Show_id="true" Show_Val="true" Pos="316,-24" rotation="0" hflip="1" vflip="1" label="Temp_Pot" idLabPos="0,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Resistance="10 kOhm" Value_Ohm="3000 Ohm" Slider="false" Scale="1" />
+<item itemtype="Potentiometer" CircId="Pot-1" mainComp="false" ShowProp="Resistance" Show_id="true" Show_Val="true" Pos="-636,444" rotation="0" hflip="1" vflip="1" label="Temp_Pot" idLabPos="0,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Resistance="10 kOhm" Value_Ohm="5850 Ohm" Slider="false" Scale="1" />
 
-<item itemtype="Potentiometer" CircId="Pot-2" mainComp="false" ShowProp="Resistance" Show_id="true" Show_Val="true" Pos="436,-24" rotation="0" hflip="1" vflip="1" label="Setpoint_Pot" idLabPos="0,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Resistance="10 kOhm" Value_Ohm="5000 Ohm" Slider="false" Scale="1" />
-
-<item itemtype="Potentiometer" CircId="Pot-3" mainComp="false" ShowProp="Resistance" Show_id="true" Show_Val="true" Pos="556,-24" rotation="0" hflip="1" vflip="1" label="Humedad_Pot" idLabPos="0,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Resistance="10 kOhm" Value_Ohm="5000 Ohm" Slider="false" Scale="1" />
+<item itemtype="Potentiometer" CircId="Pot-2" mainComp="false" ShowProp="Resistance" Show_id="true" Show_Val="true" Pos="-548,488" rotation="0" hflip="1" vflip="1" label="Setpoint_Pot" idLabPos="0,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Resistance="10 kOhm" Value_Ohm="7420 Ohm" Slider="false" Scale="1" />
 
 <item itemtype="Led" CircId="Led-1" mainComp="false" Show_id="false" Show_Val="false" Pos="908,36" rotation="-180" hflip="1" vflip="1" label="Luz_Interna" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Color="White" Grounded="true" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ohm" />
 
@@ -36,15 +34,13 @@
 
 <item itemtype="Resistor" CircId="Resistor-4" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="844,276" rotation="0" hflip="1" vflip="1" label="R_Buz" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="100 Ohm" />
 
-<item itemtype="Fixed Voltage" CircId="FV-1" mainComp="false" Show_id="false" Show_Val="true" Pos="176,-20" rotation="0" hflip="1" vflip="1" label="VCC_Temp" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="true" />
+<item itemtype="Fixed Voltage" CircId="FV-1" mainComp="false" Show_id="false" Show_Val="true" Pos="616,340" rotation="0" hflip="1" vflip="1" label="VCC_Temp" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="true" />
 
-<item itemtype="Fixed Voltage" CircId="FV-2" mainComp="false" Show_id="false" Show_Val="true" Pos="256,-56" rotation="0" hflip="1" vflip="1" label="VCC_Set" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="true" />
-
-<item itemtype="Fixed Voltage" CircId="FV-3" mainComp="false" Show_id="false" Show_Val="true" Pos="400,-64" rotation="0" hflip="1" vflip="1" label="VCC_Hum" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="false" />
+<item itemtype="Fixed Voltage" CircId="FV-2" mainComp="false" Show_id="false" Show_Val="true" Pos="952,372" rotation="0" hflip="1" vflip="1" label="VCC_Set" idLabPos="-64,-24" labelrot="0" valLabPos="-16,8" valLabRot="0" Voltage="5 V" Out="true" />
 
 <item itemtype="Ground" CircId="Ground-2" mainComp="false" Show_id="false" Show_Val="false" Pos="240,-104" rotation="0" hflip="1" vflip="1" label="GND_Door" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
 
-<item itemtype="Ground" CircId="GND-P1" mainComp="false" Show_id="false" Show_Val="false" Pos="176,36" rotation="0" hflip="1" vflip="1" label="GND_Temp" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+<item itemtype="Ground" CircId="GND-P1" mainComp="false" Show_id="false" Show_Val="false" Pos="1724,176" rotation="0" hflip="1" vflip="1" label="GND_Temp" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
 
 <item itemtype="Ground" CircId="GND-P2" mainComp="false" Show_id="false" Show_Val="false" Pos="296,-104" rotation="0" hflip="1" vflip="1" label="GND_Set" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
 
@@ -78,21 +74,19 @@
 
 <item itemtype="Tunnel" CircId="TunA-C3" mainComp="false" Show_id="true" Show_Val="false" Pos="468,192" rotation="0" hflip="-1" vflip="1" label="C3" idLabPos="-24,-8" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="C3" IsBus="false" />
 
-<item itemtype="Image" CircId="Image-6" mainComp="false" Show_id="false" Show_Val="false" Pos="-356,100" rotation="0" hflip="1" vflip="1" label="Image-6" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" H_size="977 _px" V_size="1253 _px" Border="2 _px" Z_Value="-1" Color="#a0a0a4" Opacity="1" Image_File="../REFRI_DEF.jpg" />
+<item itemtype="Image" CircId="Image-6" mainComp="false" Show_id="false" Show_Val="false" Pos="-384,104" rotation="0" hflip="1" vflip="1" label="Image-6" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" H_size="977 _px" V_size="1253 _px" Border="2 _px" Z_Value="-1" Color="#a0a0a4" Opacity="1" Image_File="../REFRI_DEF.jpg" />
+
+<item itemtype="Node" CircId="Node-10" mainComp="false" Pos="796,316" />
 
 <item itemtype="Connector" uid="puerta-sig" startpinid="Mega-1-35" endpinid="Resistor-Puerta-lPin" pointList="404,132,788,132,788,-44,828,-44" />
 
 <item itemtype="Connector" uid="puerta-led" startpinid="Resistor-Puerta-rPin" endpinid="Led-Puerta-lPin" pointList="860,-44,924,-44" />
-
-<item itemtype="Connector" uid="tft-sck" startpinid="Mega-1-52" endpinid="Ili9341-1-PinSck" pointList="476,140,-580,140" />
 
 <item itemtype="Connector" uid="tft-mosi" startpinid="Mega-1-51" endpinid="Ili9341-1-PinMosi" pointList="468,132,-588,132,-588,140" />
 
 <item itemtype="Connector" uid="tft-dc" startpinid="Mega-1-9" endpinid="Ili9341-1-PinDC" pointList="348,316,-596,316,-596,140" />
 
 <item itemtype="Connector" uid="tft-cs" startpinid="Mega-1-10" endpinid="Ili9341-1-PinCS" pointList="348,324,-612,324,-612,140" />
-
-<item itemtype="Connector" uid="door-signal" startpinid="Push-1-switch0pinN" endpinid="Mega-1-A1" pointList="332,-104,492,-104,492,276" />
 
 <item itemtype="Connector" uid="door-gnd" startpinid="Push-1-pinP0" endpinid="Ground-2-Gnd" pointList="300,-104,240,-104,240,-120" />
 
@@ -141,5 +135,23 @@
 <item itemtype="Connector" uid="ck-c2" startpinid="Keypad-1-Pin5" endpinid="TunK-C2-pin" pointList="-572,120,-572,284,-608,284" />
 
 <item itemtype="Connector" uid="tft-rst" startpinid="Mega-1-8" endpinid="Ili9341-1-PinRst" pointList="348,308,-604,308,-604,140" />
+
+<item itemtype="Connector" uid="tft-sck" startpinid="Mega-1-52" endpinid="Ili9341-1-PinSck" pointList="476,140,-580,140" />
+
+<item itemtype="Connector" uid="Connector-12" startpinid="FV-1-outnod" endpinid="Pot-1-PinA" pointList="632,340,632,444,-652,444" />
+
+<item itemtype="Connector" uid="Connector-18" startpinid="Push-1-switch0pinN" endpinid="Mega-1-A1" pointList="332,-104,528,-104,528,276,492,276" />
+
+<item itemtype="Connector" uid="Connector-19" startpinid="Pot-1-PinM" endpinid="Mega-1-A3" pointList="-636,460,-636,456,644,456,644,260,492,260" />
+
+<item itemtype="Connector" uid="Connector-20" startpinid="FV-2-outnod" endpinid="Pot-2-PinA" pointList="968,372,-564,372,-564,488" />
+
+<item itemtype="Connector" uid="Connector-23" startpinid="Pot-2-PinB" endpinid="Node-10-1" pointList="-532,488,-532,316,796,316" />
+
+<item itemtype="Connector" uid="Connector-25" startpinid="Node-10-2" endpinid="Mega-1-GND2" pointList="796,316,492,316" />
+
+<item itemtype="Connector" uid="Connector-38" startpinid="Mega-1-A0" endpinid="Pot-2-PinM" pointList="492,284,988,284,988,504,-548,504" />
+
+<item itemtype="Connector" uid="Connector-43" startpinid="Pot-1-PinB" endpinid="Node-10-0" pointList="-620,444,796,444,796,316" />
 
 </circuit>
