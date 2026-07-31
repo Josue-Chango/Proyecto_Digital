@@ -9,15 +9,17 @@
 //    SetPot   → A2    HumPot   → A3
 //    Relay    → 30    Buzzer   → 31
 //    Luz      → 32    CompLED  → 33   FreezeLED → 34
-//    BTN_UP   → 40    BTN_DW   → 41
-//    BTN_OK   → 42    BTN_BK   → 43
+//    Cerradura→ 35    
+//    KEYPAD ROWS → 22, 23, 24, 25
+//    KEYPAD COLS → 26, 27, 28
 //
-//  LIBRERÍAS: Adafruit_GFX, Adafruit_ILI9341, SPI
+//  LIBRERÍAS: Adafruit_GFX, Adafruit_ILI9341, SPI, Keypad
 // ============================================================
 
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
+#include <Keypad.h>
 
 #define TFT_CS   10
 #define TFT_DC    9
@@ -48,7 +50,21 @@ const int TEMP_POT_PIN = A0, DOOR_SENSOR = A1;
 const int SETPOINT_PIN = A2, HUMIDITY_PIN = A3;
 const int RELAY_PIN = 30, BUZZER_PIN = 31;
 const int LIGHT_PIN = 32, COMP_LED = 33, FREEZE_LED = 34;
-const int BTN_UP = 40, BTN_DOWN = 41, BTN_OK = 42, BTN_BACK = 43;
+const int DOOR_LOCK_PIN = 35; // Pin para abrir la puerta
+
+// ─── Configuración del Teclado Matricial 3x4 ───────────────
+const byte ROWS = 4;
+const byte COLS = 3;
+char keys[ROWS][COLS] = {
+  {'1','2','3'},
+  {'4','5','6'},
+  {'7','8','9'},
+  {'*','0','#'}
+};
+byte rowPins[ROWS] = {22, 23, 24, 25}; // Filas conectadas a estos pines
+byte colPins[COLS] = {26, 27, 28};     // Columnas conectadas a estos pines
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+char currentKey = 0; // Tecla presionada en el ciclo actual
 
 // ─── Parámetros ────────────────────────────────────────────
 const float HISTERESIS = 0.5;
@@ -73,9 +89,9 @@ bool    inSub = false;
 uint8_t editStep = 0;
 
 // ─── Otros ─────────────────────────────────────────────────
-unsigned long lastBtn[4] = {0, 0, 0, 0};
 unsigned long doorOpenSince = 0, lastDoorBeep = 0, lastSerial = 0;
 bool buzzerDoor = false, buzzerTimer = false;
+unsigned long doorLockTime = 0; // Temporizador para la cerradura
 
 // ─── Estado previo para actualizar sin parpadeo ────────────
 uint8_t  prevClkH = 255, prevClkM = 255, prevClkS = 255;
@@ -90,12 +106,8 @@ unsigned long lastDisplayUpdate = 0;
 #define DISPLAY_MS 300
 
 // ─── Botones ───────────────────────────────────────────────
-bool btnPushed(int pin, int idx) {
-  if (digitalRead(pin) == LOW && (millis() - lastBtn[idx] > DEB_MS)) {
-    lastBtn[idx] = millis();
-    return true;
-  }
-  return false;
+bool btnPushed(char expectedKey) {
+  return (currentKey == expectedKey);
 }
 
 // ─── Helpers ───────────────────────────────────────────────
@@ -205,9 +217,8 @@ void setup() {
   pinMode(LIGHT_PIN,  OUTPUT); digitalWrite(LIGHT_PIN, LOW);
   pinMode(COMP_LED,   OUTPUT); digitalWrite(COMP_LED, LOW);
   pinMode(FREEZE_LED, OUTPUT); digitalWrite(FREEZE_LED, LOW);
+  pinMode(DOOR_LOCK_PIN, OUTPUT); digitalWrite(DOOR_LOCK_PIN, LOW); // Cerradura iniciada en LOW
   pinMode(DOOR_SENSOR, INPUT_PULLUP);
-  pinMode(BTN_UP, INPUT_PULLUP); pinMode(BTN_DOWN, INPUT_PULLUP);
-  pinMode(BTN_OK, INPUT_PULLUP); pinMode(BTN_BACK, INPUT_PULLUP);
 
   drawBackground();
   prevMenuPage = 255;
@@ -221,9 +232,9 @@ void enterTemp() {
   tftCenter(freezeMode ? "MODO CONGELADOR" : "REFRIGERADOR", 10, WHITE, 1);
 
   char ts[8]; dtostrf(currentTemp, 4, 1, ts);
-  int tw = (strlen(ts) + 2) * 30;
-  tft.fillRect((240 - tw) / 2, 45, tw + 10, 40, BLACK);
-  tft.setTextSize(5); tft.setTextColor(cooling ? RED : GREEN);
+  int tw = (strlen(ts) + 2) * 24; // textSize 4 -> 24px per char
+  tft.fillRect((240 - tw) / 2, 45, tw + 10, 35, BLACK);
+  tft.setTextSize(4); tft.setTextColor(cooling ? RED : GREEN);
   tft.setCursor((240 - tw) / 2 + 5, 50);
   tft.print("T:"); tft.print(ts); tft.print("C");
 
@@ -265,9 +276,9 @@ void updateTemp() {
 
   if (currentTemp != prevTemp) {
     char ts[8]; dtostrf(currentTemp, 4, 1, ts);
-    int tw = (strlen(ts) + 2) * 30;
-    tft.fillRect((240 - tw) / 2, 45, tw + 10, 40, BLACK);
-    tft.setTextSize(5); tft.setTextColor(cooling ? RED : GREEN);
+    int tw = (strlen(ts) + 2) * 24; // textSize 4 -> 24px per char
+    tft.fillRect((240 - tw) / 2, 45, tw + 10, 35, BLACK);
+    tft.setTextSize(4); tft.setTextColor(cooling ? RED : GREEN);
     tft.setCursor((240 - tw) / 2 + 5, 50);
     tft.print("T:"); tft.print(ts); tft.print("C");
     prevTemp = currentTemp;
@@ -600,9 +611,9 @@ void menuSetpoint() {
     tft.print("T:"); tft.print(ts); tft.print("C");
     prevTarget = targetTemp;
   }
-  if (btnPushed(BTN_UP, 0)) { targetTemp = min(15.0f, targetTemp + 0.5f); }
-  if (btnPushed(BTN_DOWN, 1)) { targetTemp = max(-10.0f, targetTemp - 0.5f); }
-  if (btnPushed(BTN_OK, 2) || btnPushed(BTN_BACK, 3)) {
+  if (btnPushed('2')) { targetTemp = min(15.0f, targetTemp + 0.5f); }
+  if (btnPushed('8')) { targetTemp = max(-10.0f, targetTemp - 0.5f); }
+  if (btnPushed('5') || btnPushed('4')) {
     inSub = false; menuPage = 1; prevMenuPage = 255; enterTemp();
   }
 }
@@ -636,16 +647,16 @@ void menuSetClock() {
     prevClkM = clkM;
   }
 
-  if (btnPushed(BTN_UP, 0)) {
+  if (btnPushed('2')) {
     if (editStep == 0) clkH = (clkH + 1) % 24;
     else clkM = (clkM + 1) % 60;
     clkS = 0;
   }
-  if (btnPushed(BTN_DOWN, 1)) {
+  if (btnPushed('8')) {
     if (editStep == 0) clkH = (clkH + 23) % 24;
     else clkM = (clkM + 59) % 60;
   }
-  if (btnPushed(BTN_OK, 2)) {
+  if (btnPushed('5')) {
     if (editStep == 0) {
       editStep = 1;
       tft.fillRect(0, 0, 240, 28, YELLOW);
@@ -654,7 +665,7 @@ void menuSetClock() {
       editStep = 0; inSub = false; menuPage = 2; prevMenuPage = 255; enterClock();
     }
   }
-  if (btnPushed(BTN_BACK, 3)) {
+  if (btnPushed('4')) {
     editStep = 0; inSub = false; menuPage = 1; prevMenuPage = 255; enterClock();
   }
 }
@@ -679,18 +690,18 @@ void menuSetTimer() {
     prevTimerLeft = timerSet;
   }
 
-  if (btnPushed(BTN_UP, 0)) {
+  if (btnPushed('2')) {
     timerSet = min((uint16_t)5940, (uint16_t)(timerSet + 60));
   }
-  if (btnPushed(BTN_DOWN, 1)) {
+  if (btnPushed('8')) {
     if (timerSet >= 60) timerSet -= 60;
   }
-  if (btnPushed(BTN_OK, 2)) {
+  if (btnPushed('5')) {
     timerLeft = timerSet; timerOn = (timerLeft > 0);
     timerDone = false; lastTimerTick = millis();
     inSub = false; menuPage = 3; prevMenuPage = 255; enterTimer();
   }
-  if (btnPushed(BTN_BACK, 3)) {
+  if (btnPushed('4')) {
     inSub = false; menuPage = 3; prevMenuPage = 255; enterTimer();
   }
 }
@@ -700,16 +711,37 @@ void menuSetTimer() {
 // ═══════════════════════════════════════════════════════════
 void loop() {
   unsigned long now = millis();
+  
+  // Leer el teclado
+  currentKey = keypad.getKey();
+  
+  // Control de la cerradura con la tecla '*'
+  static bool isDoorUnlocked = false;
+  if (currentKey == '*') {
+    digitalWrite(DOOR_LOCK_PIN, HIGH);
+    doorLockTime = now;
+    isDoorUnlocked = true;
+    Serial.println("Tecla * presionada: Abriendo puerta por 3 segs...");
+  }
+  // Apagar la cerradura después de 3 segundos
+  if (isDoorUnlocked && (now - doorLockTime > 3000)) {
+    digitalWrite(DOOR_LOCK_PIN, LOW);
+    isDoorUnlocked = false;
+    Serial.println("Cerradura bloqueada nuevamente.");
+  }
 
   // ── Leer sensores ──────────────────────────────────────
   currentTemp = -10.0f + (analogRead(TEMP_POT_PIN) / 1023.0f) * 50.0f;
   humidity    = (analogRead(HUMIDITY_PIN) / 1023.0f) * 100.0f;
-  doorOpen    = (digitalRead(DOOR_SENSOR) == LOW);
+  
+  // La puerta se considera abierta si se presiona el botón físico O si se activó por 3 segs con el teclado
+  doorOpen    = (digitalRead(DOOR_SENSOR) == LOW) || isDoorUnlocked;
+  
   freezeMode  = (targetTemp <= 0.0f);
 
-  if (!(inSub && menuPage == 5)) {
-    targetTemp = -10.0f + (analogRead(SETPOINT_PIN) / 1023.0f) * 25.0f;
-  }
+  // El Setpoint ahora se controla exclusivamente con el teclado, así que
+  // eliminamos la lectura del potenciómetro que estaba sobreescribiendo el valor.
+  // targetTemp = -10.0f + (analogRead(SETPOINT_PIN) / 1023.0f) * 25.0f;
 
   // ── Control compresor ───────────────────────────────────
   if (currentTemp > targetTemp + HISTERESIS) {
@@ -748,10 +780,10 @@ void loop() {
       default: inSub = false; break;
     }
   } else {
-    if (btnPushed(BTN_UP, 0))   { menuPage = (menuPage + 4) % 5; lastDisplayUpdate = 0; }
-    if (btnPushed(BTN_DOWN, 1)) { menuPage = (menuPage + 1) % 5; lastDisplayUpdate = 0; }
+    if (btnPushed('2'))   { menuPage = (menuPage + 4) % 5; lastDisplayUpdate = 0; }
+    if (btnPushed('8')) { menuPage = (menuPage + 1) % 5; lastDisplayUpdate = 0; }
 
-    if (btnPushed(BTN_OK, 2)) {
+    if (btnPushed('5')) {
       lastDisplayUpdate = 0;
       switch (menuPage) {
         case 1: inSub = true; menuPage = 5; break;
